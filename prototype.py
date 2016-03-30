@@ -3,20 +3,53 @@ import random
 
 
 class Block:
-    def __init__(self, w=40, h=40):
+    def __init__(self, w=15, h=15):
         self.w = w
         self.h = h
         self.x = self.y = 0
-        self.block_colour = (254,89,90)
-        self.level = ["---------------",
-                      "-",
-                      "-",
-                      "-",
-                      "---------------",
-                      "              -",
-                      "              -",
-                      "              -",
-                      "---------------"]
+        self.block_colour = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
+        self.level = ["------------------------------------------------------",
+                      "---                            -           -          ",
+                      "            -----              -           -          ",
+                      "-   --             -                                  ",
+                      "      --       ---                                    ",
+                      "           ----                                       ",
+                      "    --            -                                   ",
+                      " --      -    -                                       ",
+                      " --      -    -                                       ",
+                      " --      -    -                                       ",
+                      " --      -    -                                       ",
+                      "           --                                         ",
+                      " ---             -                                    ",
+                      "                                                      ",
+                      "    -----           --                                ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "                                                      ",
+                      "------------------------------------------------------"]
 
 
 class Base:
@@ -24,7 +57,7 @@ class Base:
         self.main()
     def main(self, Play=True):
         py.init()
-        self.window = py.display.set_mode((800, 640))
+        self.window = py.display.set_mode((800, 630))
         py.display.set_caption('Psyho Masya')
         bgColour = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
         self.window.fill(bgColour)
