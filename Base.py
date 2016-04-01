@@ -1,59 +1,72 @@
 from pygame import *
+from Player import *
 import pygame as pyg
 import random as ran
 
-WIN_W = 1388
+WIN_W = 960
 PLATFORM_W = 32
-WIN_H = 1266
+WIN_H = 640
 PLATFORM_H = 32
 BG_COLOUR = (ran.randint(0,255), ran.randint(0,255), ran.randint(0,255))
 PLATFORM_COLOUR = (ran.randint(0,255), ran.randint(0,255), ran.randint(0,255))
 DISPLAY = (WIN_W, WIN_H)
-level = ["---------------------------------------------------------------------------------------------------",
-         "",
-         "",
-         "",
-         "",
-         "",
-         "",
-         "--------------------------------------------------------------------------------------------------",
-         "",
-         "",
-         "",
-         "",
-         "",
-         "",
-         "",
-         "",
-         "",
-         "---------------------------------------------------------------------------------------------------"]
+
 
 def main():
     play = True
     pyg.init()
+    masya = Player()
+    left = right = False
+    level = ["------------------------------",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "                              ",
+             "------------------------------"]
     screen = pyg.display.set_mode(DISPLAY)
     pyg.display.set_caption('BroFormer')
     clock = pyg.time.Clock()
+    bg = Surface((WIN_W,WIN_H))
     while play:
-        for event in pyg.event.get():
-            if event.type == pyg.QUIT:
-                play = False
-        bg = Surface((WIN_W,WIN_H))
         bg.fill(BG_COLOUR)
-        pl_x = pl_y = 0
+        bl_x = bl_y = 0
         for row in level:
             for symbol in row:
                 if symbol == '-':
-                    print 'yeap'
                     platform = Surface((PLATFORM_W,PLATFORM_H))
                     platform.fill(PLATFORM_COLOUR)
-                    screen.blit(platform,(pl_x,pl_y))
-                    pl_x += PLATFORM_W
-                pl_y += PLATFORM_H
-                pl_x = 0
+                    screen.blit(platform,(bl_x,bl_y))
+                bl_x += PLATFORM_W
+            bl_y += PLATFORM_H
+            bl_x = 0
+        for event in pyg.event.get():
+            if event.type == pyg.QUIT:
+                play = False
+            if event.type == KEYDOWN:
+                if event.key == K_LEFT: left = True
+                if event.key == K_RIGHT: right = True
+            if event.type == KEYUP:
+                if event.key == K_RIGHT: right = False
+                if event.key == K_LEFT: left = False
 
-        screen.blit(bg, (0,0))
+        masya.update(left, right)
+        masya.draw(screen)
         pyg.display.update()
+        screen.blit(bg, (0,0))
         clock.tick(60)
     pyg.quit()
 
