@@ -17,6 +17,7 @@ def main():
     pyg.init()
     masya = Player()
     left = right = False
+    up = False
     level = ["------------------------------",
              "                              ",
              "                              ",
@@ -59,11 +60,13 @@ def main():
             if event.type == KEYDOWN:
                 if event.key == K_LEFT: left = True
                 if event.key == K_RIGHT: right = True
+                if event.key == K_UP or event.key == 32: up = True
             if event.type == KEYUP:
                 if event.key == K_RIGHT: right = False
                 if event.key == K_LEFT: left = False
+                if event.key == K_UP: up = False
 
-        masya.update(left, right)
+        masya.update(left, right, up)
         masya.draw(screen)
         pyg.display.update()
         screen.blit(bg, (0,0))
