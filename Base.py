@@ -1,23 +1,25 @@
 from pygame import *
+from Blocks import *
 from Player import *
 import pygame as pyg
 import random as ran
 
 WIN_W = 960
-PLATFORM_W = 32
 WIN_H = 640
-PLATFORM_H = 32
 BG_COLOUR = (ran.randint(0,255), ran.randint(0,255), ran.randint(0,255))
-PLATFORM_COLOUR = (ran.randint(0,255), ran.randint(0,255), ran.randint(0,255))
 DISPLAY = (WIN_W, WIN_H)
 
 
 def main():
     play = True
     pyg.init()
-    masya = Player()
+    clock = pyg.time.Clock()
+    masya = Player(540, 578)
     left = right = False
     up = False
+    everything = pyg.sprite.Group()
+    everything.add(masya)
+    platforms = []
     level = ["------------------------------",
              "                              ",
              "                              ",
@@ -34,13 +36,12 @@ def main():
              "                              ",
              "                              ",
              "                              ",
-             "                              ",
+             "               ---            ",
              "                              ",
              "                              ",
              "------------------------------"]
     screen = pyg.display.set_mode(DISPLAY)
     pyg.display.set_caption('BroFormer')
-    clock = pyg.time.Clock()
     bg = Surface((WIN_W,WIN_H))
     while play:
         bg.fill(BG_COLOUR)
@@ -48,9 +49,9 @@ def main():
         for row in level:
             for symbol in row:
                 if symbol == '-':
-                    platform = Surface((PLATFORM_W,PLATFORM_H))
-                    platform.fill(PLATFORM_COLOUR)
-                    screen.blit(platform,(bl_x,bl_y))
+                    block = Blocks(bl_x,bl_y)
+                    everything.add(block)
+                    platforms.append(block)
                 bl_x += PLATFORM_W
             bl_y += PLATFORM_H
             bl_x = 0
@@ -66,11 +67,11 @@ def main():
                 if event.key == K_LEFT: left = False
                 if event.key == K_UP: up = False
 
-        masya.update(left, right, up)
-        masya.draw(screen)
+        masya.update(left, right, up, platforms)
+        everything.draw(screen)
         pyg.display.update()
         screen.blit(bg, (0,0))
-        clock.tick(60)
+        clock.tick(1000)
     pyg.quit()
 
 
