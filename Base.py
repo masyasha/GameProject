@@ -10,6 +10,29 @@ BG_COLOUR = (ran.randint(0,255), ran.randint(0,255), ran.randint(0,255))
 DISPLAY = (WIN_W, WIN_H)
 
 
+class Camera(object):
+    def __init__(self, cam_func, w, h):
+        self.camera_func = cam_func
+        self.state = Rect(0, 0, w, h)
+    def apply(self, target):
+        return target.rect.move(self.state.topleft)
+    def update(self, target):
+        self.state = self.camera_func(self.state, target.rect)
+
+def cam_cfg(camera, target_rect):
+    l, t, _, _ = target_rect
+    _, _, w, h = camera
+    l, t = -l + WIN_W / 2, -t + WIN_H / 2
+
+    l = min(0, l)                           # no far LEFT border
+    l = max(-(camera.width - WIN_W), l)     # no far RIGHT border
+    t = max(-(camera.height - WIN_H), t)    # no far BOTTOM border
+    t = min(0, t)                           # no far TOP border
+
+    return Rect(l, t, w, h)
+
+
+
 def main():
     play = True
     pyg.init()
@@ -20,12 +43,12 @@ def main():
     everything = pyg.sprite.Group()
     everything.add(masya)
     platforms = []
-    level = ["------------------------------",
+    level = ["------------------------------------------------------------",
              "-                             ",
              "-                             ",
              "-                             ",
              "-                             ",
-             "-                        -----",
+             "-                        -----------------------------------------------------------",
              "-      ---                   -",
              "-               -----        -",
              "-                            -",
@@ -53,6 +76,9 @@ def main():
             bl_x += PLATFORM_W
         bl_y += PLATFORM_H
         bl_x = 0
+    total_lvl_w = len(level[0]) * PLATFORM_W    # stage's width
+    total_lvl_h = len(level) * PLATFORM_H       # stage's height
+    camera = Camera(cam_cfg, total_lvl_w, total_lvl_h)
     while play:
         pyg.display.set_caption('BroFormer: FPS = ' + str(int(clock.get_fps())))
         for event in pyg.event.get():
@@ -61,14 +87,16 @@ def main():
             if event.type == KEYDOWN:
                 if event.key == K_LEFT: left = True
                 if event.key == K_RIGHT: right = True
-                if event.key == K_UP or event.key == 32: up = True
+                if event.key == K_UP: up = True
             if event.type == KEYUP:
                 if event.key == K_RIGHT: right = False
                 if event.key == K_LEFT: left = False
                 if event.key == K_UP: up = False
 
         masya.update(left, right, up, platforms)
-        everything.draw(screen)
+        camera.update(masya)
+        for something in everything:
+            screen.blit(something.image, camera.apply(something))
         pyg.display.update()
         screen.blit(bg, (0,0))
         clock.tick(60)
