@@ -2,11 +2,11 @@ import pygame as py
 from pygame import *
 import random as ran
 
-MOVE_SPEED = 7
+MOVE_SPEED = 5
 PL_W = 20
 PL_H = 30
-JUMP = 10
-GRAVITY = 0.5
+JUMP = 9
+GRAVITY = 0.3
 PL_COLOUR = (ran.randint(0,255), ran.randint(0,255), ran.randint(0,255))
 
 class Player(sprite.Sprite):
