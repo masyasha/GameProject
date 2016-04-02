@@ -3,19 +3,22 @@ from pygame import *
 import random as ran
 import pyganim
 
-MOVE_SPEED = 5
+MOVE_SPEED = 6
+EXTRA_SPEED = 7.5
 PL_W = 20
 PL_H = 30
-JUMP = 9
-GRAVITY = 0.3
+JUMP = 10
+EXTRA_JUMP = 12.5
+GRAVITY = 0.35
 PL_COLOUR = (ran.randint(0,255), ran.randint(0,255), ran.randint(0,255))
 ANIM_DELAY = 0.1
-ANIM_R = [('mario/r1.png'), ('mario/r2.png'), ('mario/r3.png'), ('mario/r4.png'), ('mario/r5.png')]
-ANIM_L = [('mario/l1.png'), ('mario/l2.png'), ('mario/l3.png'), ('mario/l4.png'), ('mario/l5.png')]
+ANIM_EXTRA_DELAY = 0.075
+ANIM_R = ['mario/r1.png', 'mario/r2.png', 'mario/r3.png', 'mario/r4.png', 'mario/r5.png']
+ANIM_L = ['mario/l1.png', 'mario/l2.png', 'mario/l3.png', 'mario/l4.png', 'mario/l5.png']
 ANIM_JUMP_L = [('mario/jl.png', 0.1)]
 ANIM_JUMP_R = [('mario/jr.png', 0.1)]
 ANIM_JUMP = [('mario/j.png', 0.1)]
-ANIM_STAY = ['mario/0.png', 0.1]
+ANIM_STAY = [('mario/0.png', 0.1)]
 
 class Player(sprite.Sprite):
     def __init__(self,x,y):
@@ -37,7 +40,7 @@ class Player(sprite.Sprite):
         self.boltAnimRight.play()
         """ ANIMATION: LEFT """
         boltAnim = []
-        for picture in ANIM_JUMP_L:
+        for picture in ANIM_L:
             boltAnim.append((picture, ANIM_DELAY))
         self.boltAnimLeft = pyganim.PygAnimation(boltAnim)
         self.boltAnimLeft.play()
@@ -57,11 +60,13 @@ class Player(sprite.Sprite):
         """ ANIMATION BLOCK ENDS HERE """
     def update(self, left, right, up, platforms):
         if left:
-            self.vel_x = -MOVE_SPEED, self.image.fill(PL_COLOUR)
+            self.vel_x = -MOVE_SPEED
+            self.image.fill(PL_COLOUR)
             if up: self.boltAnimJumpLeft.blit(self.image, (0,0))
             else: self.boltAnimLeft.blit(self.image, (0,0))
         if right:
-            self.vel_x = MOVE_SPEED, self.image.fill(PL_COLOUR)
+            self.vel_x = MOVE_SPEED
+            self.image.fill(PL_COLOUR)
             if up: self.boltAnimJumpRight.blit(self.image, (0,0))
             else: self.boltAnimRight.blit(self.image, (0,0))
         if up and self.onYoFeet:
