@@ -29,11 +29,11 @@ def main():
              "                              ",
              "                              ",
              "                              ",
+             "-                             ",
              "                              ",
              "                              ",
              "                              ",
-             "                              ",
-             "                              ",
+             "    ----                      ",
              "                              ",
              "                              ",
              "               ---            ",
@@ -41,20 +41,20 @@ def main():
              "                              ",
              "------------------------------"]
     screen = pyg.display.set_mode(DISPLAY)
-    pyg.display.set_caption('BroFormer')
     bg = Surface((WIN_W,WIN_H))
+    bg.fill(BG_COLOUR)
+    bl_x = bl_y = 0
+    for row in level:
+        for symbol in row:
+            if symbol == '-':
+                block = Blocks(bl_x,bl_y)
+                everything.add(block)
+                platforms.append(block)
+            bl_x += PLATFORM_W
+        bl_y += PLATFORM_H
+        bl_x = 0
     while play:
-        bg.fill(BG_COLOUR)
-        bl_x = bl_y = 0
-        for row in level:
-            for symbol in row:
-                if symbol == '-':
-                    block = Blocks(bl_x,bl_y)
-                    everything.add(block)
-                    platforms.append(block)
-                bl_x += PLATFORM_W
-            bl_y += PLATFORM_H
-            bl_x = 0
+        pyg.display.set_caption('BroFormer: FPS = ' + str(int(clock.get_fps())))
         for event in pyg.event.get():
             if event.type == pyg.QUIT:
                 play = False
@@ -71,7 +71,7 @@ def main():
         everything.draw(screen)
         pyg.display.update()
         screen.blit(bg, (0,0))
-        clock.tick(1000)
+        clock.tick(60)
     pyg.quit()
 
 
