@@ -38,12 +38,11 @@ def main():
     pyg.init()
     clock = pyg.time.Clock()
     masya = Player(540, 578)
-    left = right = False
-    up = False
+    left = right = up = boost = False
     everything = pyg.sprite.Group()
     everything.add(masya)
     platforms = []
-    level = ["------------------------------------------------------------",
+    level = ["------------------------------------------------------------------------------------",
              "-                             ",
              "-                             ",
              "-                             ",
@@ -85,15 +84,18 @@ def main():
             if event.type == pyg.QUIT:
                 play = False
             if event.type == KEYDOWN:
+                print event.key
                 if event.key == K_LEFT: left = True
                 if event.key == K_RIGHT: right = True
                 if event.key == K_UP: up = True
+                if event.key == 304: boost = True
             if event.type == KEYUP:
                 if event.key == K_RIGHT: right = False
                 if event.key == K_LEFT: left = False
                 if event.key == K_UP: up = False
+                if event.key == 304: boost = False
 
-        masya.update(left, right, up, platforms)
+        masya.update(left, right, up, boost, platforms)
         camera.update(masya)
         for something in everything:
             screen.blit(something.image, camera.apply(something))
