@@ -1,6 +1,5 @@
 from pygame import *
 import pygame as py
-import time
 
 ENEMY_W = 25
 ENEMY_H = 35
@@ -15,7 +14,8 @@ class Enemy(sprite.Sprite):
         self.image = Surface((ENEMY_W,ENEMY_H))
         self.image.fill(ENEMY_COLOUR)
         self.rect = Rect(x, y, ENEMY_W, ENEMY_H)
-    def update(self, start):
+    def update(self, start, screen):
         if start:
             self.image.fill(ENEMY_COLOUR)
             self.rect.x += ENEMY_SPEED
+            screen.blit(self.image, (self.rect.x, self.rect.y))
