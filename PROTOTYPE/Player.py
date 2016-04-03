@@ -12,7 +12,7 @@ EXTRA_JUMP = 12.5
 GRAVITY = 0.35
 PL_COLOUR = (ran.randint(0,255), ran.randint(0,255), ran.randint(0,255))
 ANIM_DELAY = 0.1
-ANIM_EXTRA_DELAY = 0.075
+ANIM_EXTRA_DELAY = 0.07
 ANIM_R = ['mario/r1.png', 'mario/r2.png', 'mario/r3.png', 'mario/r4.png', 'mario/r5.png']
 ANIM_L = ['mario/l1.png', 'mario/l2.png', 'mario/l3.png', 'mario/l4.png', 'mario/l5.png']
 ANIM_JUMP_L = [('mario/jl.png', 0.1)]
@@ -34,16 +34,24 @@ class Player(sprite.Sprite):
         self.image.set_colorkey(PL_COLOUR)
         """ ANIMATION: RIGHT """
         boltAnim = []
+        extra_boltAnim = []
         for picture in ANIM_R:
             boltAnim.append((picture, ANIM_DELAY))
+            extra_boltAnim.append((picture, ANIM_EXTRA_DELAY))
         self.boltAnimRight = pyganim.PygAnimation(boltAnim)
+        self.boltAnim_EXTRA_Right = pyganim.PygAnimation(extra_boltAnim)
         self.boltAnimRight.play()
+        self.boltAnim_EXTRA_Right.play()
         """ ANIMATION: LEFT """
         boltAnim = []
+        extra_boltAnim = []
         for picture in ANIM_L:
             boltAnim.append((picture, ANIM_DELAY))
+            extra_boltAnim.append((picture, ANIM_EXTRA_DELAY))
         self.boltAnimLeft = pyganim.PygAnimation(boltAnim)
+        self.boltAnim_EXTRA_Left = pyganim.PygAnimation(extra_boltAnim)
         self.boltAnimLeft.play()
+        self.boltAnim_EXTRA_Left.play()
         """ ANIMATION: STRAIGHT """
         self.boltAnimStay = pyganim.PygAnimation(ANIM_STAY)
         self.boltAnimStay.play()
@@ -58,19 +66,28 @@ class Player(sprite.Sprite):
         self.boltAnimJump = pyganim.PygAnimation(ANIM_JUMP)
         self.boltAnimJump.play()
         """ ANIMATION BLOCK ENDS HERE """
-    def update(self, left, right, up, platforms):
+    def update(self, left, right, up, boost, platforms):
         if left:
             self.vel_x = -MOVE_SPEED
             self.image.fill(PL_COLOUR)
             if up: self.boltAnimJumpLeft.blit(self.image, (0,0))
             else: self.boltAnimLeft.blit(self.image, (0,0))
+            if boost:
+                self.boltAnim_EXTRA_Left.blit(self.image, (0,0))
+                self.vel_x = -EXTRA_SPEED
         if right:
             self.vel_x = MOVE_SPEED
             self.image.fill(PL_COLOUR)
             if up: self.boltAnimJumpRight.blit(self.image, (0,0))
             else: self.boltAnimRight.blit(self.image, (0,0))
+            if boost:
+                self.boltAnim_EXTRA_Right.blit(self.image, (0,0))
+                self.vel_x = EXTRA_SPEED
         if up and self.onYoFeet:
-            self.vel_y = -JUMP
+            if boost and (left or right):
+                self.vel_y = -EXTRA_JUMP
+            else:
+                self.vel_y = -JUMP
             self.onYoFeet = False
             self.image.fill(PL_COLOUR)
             self.boltAnimJump.blit(self.image, (0,0))
@@ -82,18 +99,4 @@ class Player(sprite.Sprite):
             self.boltAnimStay.blit(self.image, (0,0))
         self.onYoFeet = False
         self.rect.y += self.vel_y
-        self.collision(0, self.vel_y, platforms)
-        self.rect.x += self.vel_x
-        self.collision(self.vel_x, 0, platforms)
-    def collision(self, vel_x, vel_y, platforms):
-        for platform in platforms:
-            if sprite.collide_rect(self, platform):            # checking the collision between 2 objects
-                if vel_x > 0: self.rect.right = platform.rect.left      # I really fkin' dont understand this
-                if vel_x < 0: self.rect.left = platform.rect.right      # piece of damny code
-                if vel_y > 0:
-                    self.rect.bottom = platform.rect.top
-                    self.onYoFeet = True
-                    self.vel_y = 0
-                if vel_y < 0:
-                    self.rect.top = platform.rect.bottom
-                    self.vel_y = 0
+        self.collision(0, self.vel_y, platfor
