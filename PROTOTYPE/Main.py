@@ -42,6 +42,7 @@ def main():
     masya = Player(540, 578)
     meandr = Enemy()
     left = right = up = boost = start = False
+    alive = True
     everything = pyg.sprite.Group()
     everything.add(masya, meandr)
     platforms = []
@@ -85,9 +86,8 @@ def main():
         pyg.display.set_caption('BroFormer: FPS = ' + str(int(clock.get_fps())))
         if masya.rect.x in ENEMY_START_BOX_X:
             if masya.rect.y in ENEMY_START_BOX_Y:
-                print "WORKS!!!"
                 start = True
-        meandr.update(start, screen)
+        meandr.update(start, screen, alive)
         for event in pyg.event.get():
             if event.type == pyg.QUIT:
                 play = False
