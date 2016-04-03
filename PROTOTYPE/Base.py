@@ -27,7 +27,7 @@ def cam_cfg(camera, target_rect):
     l = min(0, l)                           # no far LEFT border
     l = max(-(camera.width - WIN_W), l)     # no far RIGHT border
     t = max(-(camera.height - WIN_H), t)    # no far BOTTOM border
-    t = min(0, t)                           # no far TOP border
+    t = min(0, t)                           # no far TOP border 
 
     return Rect(l, t, w, h)
 
@@ -106,4 +106,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main() 
