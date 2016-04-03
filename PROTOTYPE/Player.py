@@ -3,13 +3,13 @@ from pygame import *
 import random as ran
 import pyganim
 
-MOVE_SPEED = 6
+MOVE_SPEED = 5
 EXTRA_SPEED = 7.5
 PL_W = 20
 PL_H = 30
-JUMP = 10
-EXTRA_JUMP = 12.5
-GRAVITY = 0.35
+JUMP = 9
+EXTRA_JUMP = 12
+GRAVITY = 0.32
 PL_COLOUR = (ran.randint(0,255), ran.randint(0,255), ran.randint(0,255))
 ANIM_DELAY = 0.1
 ANIM_EXTRA_DELAY = 0.07
@@ -21,7 +21,7 @@ ANIM_JUMP = [('mario/j.png', 0.1)]
 ANIM_STAY = [('mario/0.png', 0.1)]
 
 class Player(sprite.Sprite):
-    def __init__(self,x,y):
+    def __init__(self,x,y,):
         sprite.Sprite.__init__(self)
         self.onYoFeet = True
         self.vel_x = self.vel_y = 0
@@ -29,7 +29,6 @@ class Player(sprite.Sprite):
         self.Y_start = y
         self.image = Surface((PL_W,PL_H))
         self.image.fill(PL_COLOUR)
-        #self.image = image.load("hero.gif")
         self.rect = Rect(x, y, PL_W, PL_H)
         self.image.set_colorkey(PL_COLOUR)
         """ ANIMATION: RIGHT """
@@ -98,5 +97,19 @@ class Player(sprite.Sprite):
             if not up: self.image.fill(PL_COLOUR)
             self.boltAnimStay.blit(self.image, (0,0))
         self.onYoFeet = False
+        self.rect.x += self.vel_x
+        self.collision(self.vel_x, 0, platforms)
         self.rect.y += self.vel_y
-        self.collision(0, self.vel_y, platfor
+        self.collision(0, self.vel_y, platforms)
+    def collision(self, vel_x, vel_y, platforms):
+        for platform in platforms:
+            if sprite.collide_rect(self, platform):            # checking the collision between 2 objects
+                if vel_x > 0: self.rect.right = platform.rect.left      # I really fkin' dont understand this
+                if vel_x < 0: self.rect.left = platform.rect.right      # piece of damny code
+                if vel_y > 0:
+                    self.rect.bottom = platform.rect.top
+                    self.onYoFeet = True
+                    self.vel_y = 0
+                if vel_y < 0:
+                    self.rect.top = platform.rect.bottom
+                    self.vel_y = 0
