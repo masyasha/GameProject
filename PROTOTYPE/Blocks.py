@@ -10,5 +10,5 @@ class Blocks(sprite.Sprite):
     def __init__(self,x,y):
         sprite.Sprite.__init__(self)
         self.image = Surface((PLATFORM_W, PLATFORM_H))
-        self.image.fill(PLATFORM_COLOUR)
+        #self.image.fill(PLATFORM_COLOUR)
         self.rect = Rect(x, y, PLATFORM_W, PLATFORM_H)
