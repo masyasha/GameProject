@@ -13,3 +13,4 @@ class Blocks(sprite.Sprite):
         self.image = image.load("bl.gif")
         #self.image.fill(PLATFORM_COLOUR)
         self.rect = Rect(x, y, PLATFORM_W, PLATFORM_H)
+
