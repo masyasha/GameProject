@@ -4,11 +4,11 @@ import random as ran
 import pyganim
 
 MOVE_SPEED = 5
-EXTRA_SPEED = 7.5
+EXTRA_SPEED = 9
 PL_W = 20
 PL_H = 30
 JUMP = 9.5
-EXTRA_JUMP = 12
+EXTRA_JUMP = 12.5
 GRAVITY = 0.32
 PL_COLOUR = (ran.randint(0,255), ran.randint(0,255), ran.randint(0,255))
 ANIM_DELAY = 0.1
@@ -65,42 +65,43 @@ class Player(sprite.Sprite):
         self.boltAnimJump = pyganim.PygAnimation(ANIM_JUMP)
         self.boltAnimJump.play()
         """ ANIMATION BLOCK ENDS HERE """
-    def update(self, left, right, up, boost, platforms):
-        if left:
-            self.vel_x = -MOVE_SPEED
-            self.image.fill(PL_COLOUR)
-            if up: self.boltAnimJumpLeft.blit(self.image, (0,0))
-            else: self.boltAnimLeft.blit(self.image, (0,0))
-            if boost:
-                self.boltAnim_EXTRA_Left.blit(self.image, (0,0))
-                self.vel_x = -EXTRA_SPEED
-        if right:
-            self.vel_x = MOVE_SPEED
-            self.image.fill(PL_COLOUR)
-            if up: self.boltAnimJumpRight.blit(self.image, (0,0))
-            else: self.boltAnimRight.blit(self.image, (0,0))
-            if boost:
-                self.boltAnim_EXTRA_Right.blit(self.image, (0,0))
-                self.vel_x = EXTRA_SPEED
-        if up and self.onYoFeet:
-            if boost and (left or right):
-                self.vel_y = -EXTRA_JUMP
-            else:
-                self.vel_y = -JUMP
+    def update(self, pl_alive, left, right, up, boost, platforms):
+        if pl_alive:
+            if left:
+                self.vel_x = -MOVE_SPEED
+                self.image.fill(PL_COLOUR)
+                if up: self.boltAnimJumpLeft.blit(self.image, (0,0))
+                else: self.boltAnimLeft.blit(self.image, (0,0))
+                if boost:
+                    self.boltAnim_EXTRA_Left.blit(self.image, (0,0))
+                    self.vel_x = -EXTRA_SPEED
+            if right:
+                self.vel_x = MOVE_SPEED
+                self.image.fill(PL_COLOUR)
+                if up: self.boltAnimJumpRight.blit(self.image, (0,0))
+                else: self.boltAnimRight.blit(self.image, (0,0))
+                if boost:
+                    self.boltAnim_EXTRA_Right.blit(self.image, (0,0))
+                    self.vel_x = EXTRA_SPEED
+            if up and self.onYoFeet:
+                if boost and (left or right):
+                    self.vel_y = -EXTRA_JUMP
+                else:
+                    self.vel_y = -JUMP
+                self.onYoFeet = False
+                self.image.fill(PL_COLOUR)
+                self.boltAnimJump.blit(self.image, (0,0))
+            if not self.onYoFeet:
+                self.vel_y += GRAVITY
+            if not(left or right or up):
+                self.vel_x = 0
+                if not up: self.image.fill(PL_COLOUR)
+                self.boltAnimStay.blit(self.image, (0,0))
             self.onYoFeet = False
-            self.image.fill(PL_COLOUR)
-            self.boltAnimJump.blit(self.image, (0,0))
-        if not self.onYoFeet:
-            self.vel_y += GRAVITY
-        if not(left or right or up):
-            self.vel_x = 0
-            if not up: self.image.fill(PL_COLOUR)
-            self.boltAnimStay.blit(self.image, (0,0))
-        self.onYoFeet = False
-        self.rect.x += self.vel_x
-        self.collision(self.vel_x, 0, platforms)
-        self.rect.y += self.vel_y
-        self.collision(0, self.vel_y, platforms)
+            self.rect.x += self.vel_x
+            self.collision(self.vel_x, 0, platforms)
+            self.rect.y += self.vel_y
+            self.collision(0, self.vel_y, platforms)
     def collision(self, vel_x, vel_y, platforms):
         for platform in platforms:
             if sprite.collide_rect(self, platform):            # checking the collision between 2 objects
