@@ -9,7 +9,7 @@ WIN_W = 960
 WIN_H = 640
 BG_COLOUR = (ran.randint(0,255), ran.randint(0,255), ran.randint(0,255))
 DISPLAY = (WIN_W, WIN_H)
-ENEMY_START_BOX_X = [x for x in range(912, 948)]
+ENEMY_START_BOX_X = [x for x in range(903, 923)]
 ENEMY_START_BOX_Y = [y for y in range(0, 1000)]
 
 
@@ -39,12 +39,12 @@ def main():
     play = True
     pyg.init()
     clock = pyg.time.Clock()
-    masya = Player(540, 578)
-    meandr = Enemy()
+    player = Player(540, 578)
+    enemy = Enemy()
     left = right = up = boost = start = False
-    alive = True
+    e_alive = pl_alive = True
     everything = pyg.sprite.Group()
-    everything.add(masya, meandr)
+    everything.add(player, enemy)
     platforms = []
     level = ["------------------------------------------------------------------------------------",
              "-                             ",
@@ -84,10 +84,6 @@ def main():
     camera = Camera(cam_cfg, total_lvl_w, total_lvl_h)
     while play:
         pyg.display.set_caption('BroFormer: FPS = ' + str(int(clock.get_fps())))
-        if masya.rect.x in ENEMY_START_BOX_X:
-            if masya.rect.y in ENEMY_START_BOX_Y:
-                start = True
-        meandr.update(start, screen, alive)
         for event in pyg.event.get():
             if event.type == pyg.QUIT:
                 play = False
@@ -101,8 +97,13 @@ def main():
                 if event.key == K_RIGHT: right = False
                 if event.key == K_UP: up = False
                 if event.key == 304: boost = False
-        masya.update(left, right, up, boost, platforms)
-        camera.update(masya)
+        if not start:
+            if player.rect.x in ENEMY_START_BOX_X:
+                if player.rect.y in ENEMY_START_BOX_Y:
+                    start = True
+        enemy.update(player.rect.x, player.rect.y, start, e_alive)
+        player.update(pl_alive, left, right, up, boost, platforms)
+        camera.update(player)
         for something in everything:
             screen.blit(something.image, camera.apply(something))
         pyg.display.update()
