@@ -1,5 +1,6 @@
 import pygame as py
 from pygame import *
+from Enemy import *
 import random as ran
 import pyganim
 
@@ -31,6 +32,7 @@ class Player(sprite.Sprite):
         self.image.fill(PL_COLOUR)
         self.rect = Rect(x, y, PL_W, PL_H)
         self.image.set_colorkey(PL_COLOUR)
+        self.enemy = Enemy()
         """ ANIMATION: RIGHT """
         boltAnim = []
         extra_boltAnim = []
@@ -102,11 +104,14 @@ class Player(sprite.Sprite):
             self.collision(self.vel_x, 0, platforms)
             self.rect.y += self.vel_y
             self.collision(0, self.vel_y, platforms)
+        else:
+            self.rect.x = self.X_start
+            self.rect.y = self.Y_start
     def collision(self, vel_x, vel_y, platforms):
         for platform in platforms:
-            if sprite.collide_rect(self, platform):            # checking the collision between 2 objects
-                if vel_x > 0: self.rect.right = platform.rect.left      # I really fkin' dont understand this
-                if vel_x < 0: self.rect.left = platform.rect.right      # piece of damny code
+            if sprite.collide_rect(self, platform):                 # the moment of collision
+                if vel_x > 0: self.rect.right = platform.rect.left
+                if vel_x < 0: self.rect.left = platform.rect.right
                 if vel_y > 0:
                     self.rect.bottom = platform.rect.top
                     self.onYoFeet = True
