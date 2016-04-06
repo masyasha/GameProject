@@ -102,7 +102,8 @@ def main():
                 if player.rect.y in ENEMY_START_BOX_Y:
                     start = True
         enemy.update(player.rect.x, player.rect.y, start, e_alive)
-        player.update(pl_alive, left, right, up, boost, platforms)
+        player.update(enemy.pl_alive, left, right, up, boost, platforms)
+        enemy.pl_alive = True
         camera.update(player)
         for something in everything:
             screen.blit(something.image, camera.apply(something))
